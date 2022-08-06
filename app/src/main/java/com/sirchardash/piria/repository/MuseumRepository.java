@@ -12,7 +12,7 @@ import retrofit2.http.Query;
 public interface MuseumRepository {
 
     @GET("/museums/{id}")
-    Call<Museum> findById(@Path("id") long id, @Header("Authorization") String authorization);
+    Call<Museum> findById(@Path("id") long id);
 
     @GET("/museums")
     Call<Museums> find(@Query("language") String language, @Query("query") String query);

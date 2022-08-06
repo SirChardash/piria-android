@@ -1,28 +1,24 @@
 package com.sirchardash.piria.auth;
 
-import com.google.gson.annotations.SerializedName;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class AccessToken {
 
-    @SerializedName("access_token")
     private final String accessToken;
-    @SerializedName("refresh_token")
     private final String refreshToken;
-    @SerializedName("expires_in")
     private final long expiresIn;
-    @SerializedName("refresh_expires_in")
     private final long refreshExpiresIn;
-    @SerializedName("token_type")
     private final String tokenType;
-    @SerializedName("session_state")
     private final String sessionState;
 
-    public AccessToken(String accessToken,
-                       String refreshToken,
-                       long expiresIn,
-                       long refreshExpiresIn,
-                       String tokenType,
-                       String sessionState) {
+    public AccessToken(@JsonProperty("access_token") String accessToken,
+                       @JsonProperty("refresh_token") String refreshToken,
+                       @JsonProperty("expires_in") long expiresIn,
+                       @JsonProperty("refresh_expires_in") long refreshExpiresIn,
+                       @JsonProperty("token_type") String tokenType,
+                       @JsonProperty("session_state") String sessionState) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.expiresIn = expiresIn;

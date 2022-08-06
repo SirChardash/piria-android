@@ -1,7 +1,6 @@
 package com.sirchardash.piria.model;
 
-import lombok.Data;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Museum {
 
@@ -17,17 +16,17 @@ public class Museum {
     private final String museumType;
     private final String googleLocation;
 
-    public Museum(int id,
-                  int masterId,
-                  String language,
-                  String name,
-                  String address,
-                  String city,
-                  String country,
-                  String countryCode,
-                  String phoneNumber,
-                  String museumType,
-                  String googleLocation) {
+    public Museum(@JsonProperty("id") int id,
+                  @JsonProperty("masterId") int masterId,
+                  @JsonProperty("language") String language,
+                  @JsonProperty("name") String name,
+                  @JsonProperty("address") String address,
+                  @JsonProperty("city") String city,
+                  @JsonProperty("country") String country,
+                  @JsonProperty("countryCode") String countryCode,
+                  @JsonProperty("phoneNumber") String phoneNumber,
+                  @JsonProperty("museumType") String museumType,
+                  @JsonProperty("googleLocation") String googleLocation) {
         this.id = id;
         this.masterId = masterId;
         this.language = language;

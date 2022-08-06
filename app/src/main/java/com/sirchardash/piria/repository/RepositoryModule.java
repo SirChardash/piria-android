@@ -11,7 +11,7 @@ import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
 @Module
 public class RepositoryModule {
@@ -24,7 +24,7 @@ public class RepositoryModule {
                 .authenticator(authenticator);
         return new Retrofit.Builder()
                 .baseUrl("http://10.0.2.2:8081/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient.build())
                 .build();
     }
@@ -37,11 +37,29 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
+    public TourRepository tourRepository(@Named("authorizedRetrofit") Retrofit retrofit) {
+        return retrofit.create(TourRepository.class);
+    }
+
+    @Provides
+    @Singleton
+    public TrackingRepository trackingRepository(@Named("authorizedRetrofit") Retrofit retrofit) {
+        return retrofit.create(TrackingRepository.class);
+    }
+
+    @Provides
+    @Singleton
+    public NewsRepository newsRepository(@Named("authorizedRetrofit") Retrofit retrofit) {
+        return retrofit.create(NewsRepository.class);
+    }
+
+    @Provides
+    @Singleton
     public KeycloakRepository keycloakRepository() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://b5b7-185-125-122-29.eu.ngrok.io")
-                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl("https://a579-31-223-145-36.eu.ngrok.io")
+                .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient.build())
                 .build();
 
