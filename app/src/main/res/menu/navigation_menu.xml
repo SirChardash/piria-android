@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/navbar_museums"
+        android:title="@string/museums_navbar"
+        android:icon="@drawable/museum" />
+    <item android:id="@+id/navbar_tours"
+        android:title="@string/tours_navbar"
+        android:icon="@drawable/tours" />
+    <item android:id="@+id/navbar_profile"
+        android:title="@string/profile_navbar"
+        android:icon="@drawable/profile" />
+</menu>

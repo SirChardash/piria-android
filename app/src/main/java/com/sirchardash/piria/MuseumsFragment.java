@@ -1,6 +1,7 @@
 package com.sirchardash.piria;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.sirchardash.piria.auth.UserService;
@@ -57,7 +59,7 @@ public class MuseumsFragment extends Fragment {
 //                t -> binding.textView.setText(t.getMessage())
 //        ));
 
-        museumRepository.findById(4, authenticator.getAuthorizationHeader()).enqueue(new SimpleCallback<>(
+        museumRepository.findById(4).enqueue(new SimpleCallback<>(
                 x -> {
                     System.out.println("mamma fucker");
                     System.out.println(x.body());
@@ -68,9 +70,10 @@ public class MuseumsFragment extends Fragment {
 
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonSecond.setOnClickListener(view1 -> NavHostFragment
-                .findNavController(MuseumsFragment.this)
-                .navigate(R.id.action_SecondFragment_to_FirstFragment)
+        binding.buttonSecond.setOnClickListener(view1 -> {
+//                    Intent myIntent = new Intent(getActivity(), ViewMuseumActivity.class);
+//                    getActivity().startActivity(myIntent);
+                }
         );
     }
 

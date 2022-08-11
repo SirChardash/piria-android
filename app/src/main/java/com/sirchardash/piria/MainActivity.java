@@ -1,75 +1,59 @@
 package com.sirchardash.piria;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 import com.sirchardash.piria.databinding.ActivityMainBinding;
+
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration appBarConfiguration;
-    private ActivityMainBinding binding;
+
+    private final MuseumsFragment museumsFragment = new MuseumsFragment();
+    private final ToursFragment toursFragment = new ToursFragment();
+    private final ProfileFragment profileFragment = new ProfileFragment();
+
+    private final Map<Integer, Fragment> navbarIdToFragment = Map.of(
+            R.id.navbar_museums, museumsFragment,
+            R.id.navbar_tours, toursFragment,
+            R.id.navbar_profile, profileFragment
+    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ((PiriaApplication) getApplicationContext()).applicationComponent.inject(this);
-
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav.setOnItemSelectedListener(this::switchActiveFragment);
 
-        setSupportActionBar(binding.toolbar);
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        appBarConfiguration = new AppBarConfiguration.Builder(navController.getGraph()).build();
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
-
-        binding.fab.setOnClickListener(this::nextActivity);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, museumsFragment).commit();
     }
 
-    private void nextActivity(View view) {
-        Intent intent = new Intent(this, SideHustleActivity.class);
-        intent.putExtra("message", "hehehehe");
-        startActivity(intent);
-    }
+    private boolean switchActiveFragment(MenuItem item) {
+        Fragment selectedFragment = navbarIdToFragment.get(item.getItemId());
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        if (selectedFragment == null) {
+            return false;
+        }
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, selectedFragment)
+                .commit();
+
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
 }

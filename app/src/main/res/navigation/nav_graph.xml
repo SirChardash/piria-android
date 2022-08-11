@@ -3,27 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/MuseumsFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.sirchardash.piria.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
-
-        <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
-    </fragment>
-    <fragment
-        android:id="@+id/SecondFragment"
+        android:id="@+id/MuseumsFragment"
         android:name="com.sirchardash.piria.MuseumsFragment"
-        android:label="@string/second_fragment_label"
+        android:label="@string/first_fragment_label"
         tools:layout="@layout/fragment_museums">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_MuseumsFragment_to_ToursFragment"
+            app:destination="@id/ToursFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/ToursFragment"
+        android:name="com.sirchardash.piria.ToursFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_tours">
+
+        <action
+            android:id="@+id/action_ToursFragment_to_MuseumsFragment"
+            app:destination="@id/MuseumsFragment" />
         <argument
             android:name="randomCelling"
             app:argType="integer" />

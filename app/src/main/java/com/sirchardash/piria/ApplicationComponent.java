@@ -14,6 +14,4 @@ public interface ApplicationComponent {
 
     void inject(MuseumsFragment museumsFragment);
 
-    void inject(FirstFragment firstFragment);
-
 }
