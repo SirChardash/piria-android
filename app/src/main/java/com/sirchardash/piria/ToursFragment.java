@@ -11,7 +11,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.sirchardash.piria.databinding.FragmentToursBinding;
 
-public class ToursFragment extends Fragment {
+public class ToursFragment extends Fragment implements NavbarDockedFragment {
 
     private FragmentToursBinding binding;
 

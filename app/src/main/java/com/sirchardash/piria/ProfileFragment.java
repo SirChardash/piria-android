@@ -7,11 +7,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
 import com.sirchardash.piria.databinding.FragmentProfileBinding;
 
-public class ProfileFragment extends Fragment {
+public class ProfileFragment extends Fragment implements NavbarDockedFragment {
 
     private FragmentProfileBinding binding;
 

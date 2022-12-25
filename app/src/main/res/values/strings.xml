@@ -50,6 +50,6 @@
     <string name="tours_navbar">Tours</string>
     <string name="profile_navbar">Profile</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Ovdje ide prikaz informacija o jednom muzeju</string>
     <string name="title_activity_view_museum">ViewMuseumActivity</string>
 </resources>

@@ -4,14 +4,11 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.ui.AppBarConfiguration;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
-import com.sirchardash.piria.databinding.ActivityMainBinding;
 
 import java.util.Map;
 
@@ -29,16 +26,24 @@ public class MainActivity extends AppCompatActivity {
             R.id.navbar_profile, profileFragment
     );
 
+    private BottomNavigationView bottomNavigation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         ((PiriaApplication) getApplicationContext()).applicationComponent.inject(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setOnItemSelectedListener(this::switchActiveFragment);
+        bottomNavigation = findViewById(R.id.bottom_navigation);
+        bottomNavigation.setOnItemSelectedListener(this::switchActiveFragment);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, museumsFragment).commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        setNavbarVisibility(getSupportFragmentManager().findFragmentById(R.id.fragment_container));
     }
 
     private boolean switchActiveFragment(MenuItem item) {
@@ -48,12 +53,32 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, selectedFragment)
-                .commit();
+        setNavbarVisibility(selectedFragment);
+
+        navigateTo(selectedFragment, false);
 
         return true;
+    }
+
+    public void navigateTo(Fragment fragment, boolean backSupported) {
+        FragmentTransaction replace = getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, fragment);
+
+        if (backSupported) {
+            replace.addToBackStack(null);
+        }
+
+        replace.commit();
+        setNavbarVisibility(fragment);
+    }
+
+    private void setNavbarVisibility(Fragment activeFragment) {
+        bottomNavigation.setVisibility(
+                activeFragment instanceof NavbarDockedFragment
+                        ? View.VISIBLE
+                        : View.INVISIBLE
+        );
     }
 
 }

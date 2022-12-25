@@ -23,7 +23,7 @@ public class RepositoryModule {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .authenticator(authenticator);
         return new Retrofit.Builder()
-                .baseUrl("http://10.0.2.2:8081/")
+                .baseUrl("http://34.118.42.41:8080/")
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient.build())
                 .build();
@@ -58,7 +58,7 @@ public class RepositoryModule {
     public KeycloakRepository keycloakRepository() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://a579-31-223-145-36.eu.ngrok.io")
+                .baseUrl("http://34.118.42.41:8020")
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient.build())
                 .build();
@@ -69,7 +69,10 @@ public class RepositoryModule {
     @Provides
     @Singleton
     public UserService userService(KeycloakRepository keycloakRepository) {
-        return new UserService(keycloakRepository);
+        UserService userService = new UserService(keycloakRepository);
+        userService.login("ad", "min");
+
+        return userService;
     }
 
     @Provides
