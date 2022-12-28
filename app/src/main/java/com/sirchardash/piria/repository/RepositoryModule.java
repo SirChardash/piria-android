@@ -16,6 +16,9 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 @Module
 public class RepositoryModule {
 
+    public static final String SERVER_URL = "http://34.118.42.41";
+    public static final String KEYCLOAK_REGISTER_URL = SERVER_URL + ":8020/auth/realms/bravesmart/protocol/openid-connect/registrations?client_id=bravesmart-web&response_type=code";
+
     @Provides
     @Singleton
     @Named("authorizedRetrofit")
@@ -23,7 +26,7 @@ public class RepositoryModule {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
                 .authenticator(authenticator);
         return new Retrofit.Builder()
-                .baseUrl("http://34.118.42.41:8080/")
+                .baseUrl(SERVER_URL + ":8080/")
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient.build())
                 .build();
@@ -58,7 +61,7 @@ public class RepositoryModule {
     public KeycloakRepository keycloakRepository() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://34.118.42.41:8020")
+                .baseUrl(SERVER_URL + ":8020")
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient.build())
                 .build();

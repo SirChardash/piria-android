@@ -1,6 +1,11 @@
 package com.sirchardash.piria;
 
+import static com.sirchardash.piria.repository.RepositoryModule.KEYCLOAK_REGISTER_URL;
+import static com.sirchardash.piria.repository.RepositoryModule.SERVER_URL;
+
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +69,11 @@ public class LoginFragment extends Fragment {
                             error -> {
                             }
                     ));
+        });
+
+        binding.registerButton.setOnClickListener(view1 -> {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(KEYCLOAK_REGISTER_URL));
+            startActivity(browserIntent);
         });
     }
 
