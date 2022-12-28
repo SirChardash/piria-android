@@ -69,10 +69,7 @@ public class RepositoryModule {
     @Provides
     @Singleton
     public UserService userService(KeycloakRepository keycloakRepository) {
-        UserService userService = new UserService(keycloakRepository);
-        userService.login("ad", "min");
-
-        return userService;
+        return new UserService(keycloakRepository);
     }
 
     @Provides

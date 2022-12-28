@@ -63,11 +63,20 @@ public class MuseumsFragment extends Fragment implements NavbarDockedFragment {
                                 System.out.println("mamma fucker");
                                 System.out.println(x.body());
                                 System.out.println(x.code());
+                                if (x.code() == 200) {
+                                    ((MainActivity) getActivity()).navigateTo(new MuseumFragment(), true);
+                                } else if(x.code() == 401) {
+                                    ((MainActivity) getActivity()).navigateTo(new LoginFragment(), true);
+                                } else {
+                                    System.out.println("joooooj");
+                                }
                             },
-                            x -> System.out.println(x.getMessage())
+                            x -> {
+                                System.out.println(x.getMessage());
+                            }
+
                     ));
 
-                    ((MainActivity) getActivity()).navigateTo(new MuseumFragment(), true);
                 }
         );
     }

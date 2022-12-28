@@ -1,12 +1,11 @@
 package com.sirchardash.piria.auth;
 
-import com.sirchardash.piria.repository.SimpleCallback;
-
 import java.io.IOException;
-import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import retrofit2.Callback;
 
 @Singleton
 public class UserService {
@@ -16,27 +15,20 @@ public class UserService {
 
     private final KeycloakRepository repository;
     private AccessToken accessToken;
-    private final SimpleCallback<AccessToken> setToken = new SimpleCallback<>(
-            x -> {
-                accessToken = x.body();
-                System.out.printf(Locale.ENGLISH, "token request code: %d, set token: %b%n", x.code(), accessToken != null);
-            },
-            x -> System.out.println(x.getMessage())
-    );
 
     @Inject
     public UserService(KeycloakRepository repository) {
         this.repository = repository;
     }
 
-    public void login(String username, String password) {
+    public void login(String username, String password, Callback<AccessToken> callback) {
         repository.login(
                 REALM_NAME,
                 "password",
                 CLIENT_ID,
                 username,
                 password
-        ).enqueue(setToken);
+        ).enqueue(callback);
     }
 
     public void logout() {
@@ -44,6 +36,9 @@ public class UserService {
     }
 
     void refresh() {
+        if (accessToken == null) {
+            return;
+        }
         try {
             accessToken = repository.refresh(
                     REALM_NAME,
@@ -56,10 +51,14 @@ public class UserService {
         }
     }
 
+    public void setAccessToken(AccessToken accessToken) {
+        this.accessToken = accessToken;
+    }
+
     public String getAuthorizationHeader() {
         return accessToken != null
                 ? String.format("Bearer %s", accessToken.getAccessToken())
-                : null;
+                : "";
     }
 
 }
