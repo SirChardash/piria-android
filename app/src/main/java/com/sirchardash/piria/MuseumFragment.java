@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -52,7 +53,30 @@ public class MuseumFragment extends Fragment {
 
         tourRepository.findUpcomingByMuseumId(museum.getId()).enqueue(new SimpleCallback<>(
                 response -> {
-                    System.out.println(response.body());
+                    if (response.isSuccessful()) {
+                        System.out.println(response.body());
+                        binding.toursLayout.removeAllViews();
+                        if (response.body().getTours().isEmpty()) {
+                            TextView textView = new TextView(getContext(), null);
+                            textView.setText("Guess not.");
+                            binding.toursLayout.addView(textView);
+                            System.out.println("happened");
+                        } else {
+                            System.out.println("happened else");
+                            response.body().getTours().stream()
+                                    .map(tour -> {
+                                        TourCard tourCard = new TourCard(getContext(), null);
+                                        tourCard.setData(tour);
+
+                                        return tourCard;
+                                    }).forEach(tour -> binding.toursLayout.addView(tour));
+                        }
+                    } else {
+                        binding.toursLayout.removeAllViews();
+                        TextView textView = new TextView(getContext(), null);
+                        textView.setText("Certified ohno moment.");
+                        binding.toursLayout.addView(textView);
+                    }
                 },
                 error -> {
                     error.printStackTrace();

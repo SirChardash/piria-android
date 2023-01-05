@@ -16,4 +16,6 @@ public interface ApplicationComponent {
 
     void inject(LoginFragment loginFragment);
 
+    void inject(ToursFragment toursFragment);
+
 }
