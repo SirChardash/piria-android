@@ -61,6 +61,7 @@ public class ProfileFragment extends Fragment implements NavbarDockedFragment {
 
     private void logOut(View view) {
         userService.setAccessToken(null);
+        getActivity().getPreferences(Context.MODE_PRIVATE).edit().putString("refreshToken", null).apply();
         ((MainActivity) getActivity()).navigateTo(new LoginFragment(), true);
     }
 

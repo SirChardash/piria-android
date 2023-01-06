@@ -1,12 +1,11 @@
 package com.sirchardash.piria.auth;
 
-import android.app.Activity;
-
 import com.sirchardash.piria.LoginFragment;
 import com.sirchardash.piria.MainActivity;
 import com.sirchardash.piria.repository.SimpleCallback;
 
 import java.io.IOException;
+import java.util.function.Consumer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -22,6 +21,7 @@ public class UserService {
 
     private final KeycloakRepository repository;
     private AccessToken accessToken;
+    private Consumer<AccessToken> accessTokenConsumer;
 
     @Inject
     public UserService(KeycloakRepository repository) {
@@ -42,7 +42,7 @@ public class UserService {
         accessToken = null;
     }
 
-    void refresh() {
+    public void refresh() {
         if (accessToken == null) {
             return;
         }
@@ -53,6 +53,8 @@ public class UserService {
                     CLIENT_ID,
                     accessToken.getRefreshToken()
             ).execute().body();
+            System.out.println(accessToken);
+            accessTokenConsumer.accept(accessToken);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -75,6 +77,10 @@ public class UserService {
 
     public void setAccessToken(AccessToken accessToken) {
         this.accessToken = accessToken;
+    }
+
+    public void onRefresh(Consumer<AccessToken> accessTokenConsumer) {
+        this.accessTokenConsumer = accessTokenConsumer;
     }
 
     public String getAuthorizationHeader() {

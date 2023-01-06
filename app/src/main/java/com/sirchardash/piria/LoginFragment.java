@@ -1,7 +1,6 @@
 package com.sirchardash.piria;
 
 import static com.sirchardash.piria.repository.RepositoryModule.KEYCLOAK_REGISTER_URL;
-import static com.sirchardash.piria.repository.RepositoryModule.SERVER_URL;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,23 +13,32 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.sirchardash.piria.auth.AccessToken;
 import com.sirchardash.piria.auth.UserService;
 import com.sirchardash.piria.databinding.FragmentLoginBinding;
 import com.sirchardash.piria.repository.SimpleCallback;
+import com.sirchardash.piria.repository.TourRepository;
 
 import javax.inject.Inject;
 
 
 public class LoginFragment extends Fragment {
 
+    private static final String REFRESH_TOKEN = "refreshToken";
+
     @Inject
-    UserService authenticator;
+    UserService userService;
+    @Inject
+    TourRepository tourRepository;
 
     private FragmentLoginBinding binding;
 
     @Override
     public void onAttach(@NonNull Context context) {
-        ((PiriaApplication) requireContext().getApplicationContext()).applicationComponent.inject(this);
+        ((PiriaApplication) requireContext().getApplicationContext())
+                .applicationComponent
+                .inject(this);
+
         super.onAttach(context);
     }
 
@@ -40,42 +48,89 @@ public class LoginFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
-//        return inflater.inflate(R.layout.fragment_login, container, false);
         binding = FragmentLoginBinding.inflate(inflater, container, false);
+
         return binding.getRoot();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.loginButton.setOnClickListener(view1 -> {
-            System.out.println("did a cliccko");
-            System.out.println(binding.usernameInput.getText().toString());
-            System.out.println(binding.passwordInput.getText().toString());
-            authenticator.login(
-                    binding.usernameInput.getText().toString(),
-                    binding.passwordInput.getText().toString(),
-                    new SimpleCallback<>(
-                            response -> {
-                                System.out.println(response.code());
-                                System.out.println("heeheheheh");
-                                if (response.isSuccessful()) {
-                                    authenticator.setAccessToken(response.body());
-                                    System.out.println("successso");
-                                    getActivity().onBackPressed();
-                                }
-                            },
-                            error -> {
-                            }
-                    ));
-        });
 
-        binding.registerButton.setOnClickListener(view1 -> {
-            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(KEYCLOAK_REGISTER_URL));
-            startActivity(browserIntent);
-        });
+        userService.onRefresh(this::saveRefreshToken);
+        tryRestoreSession();
+
+        binding.loginButton.setOnClickListener(this::login);
+        binding.registerButton.setOnClickListener(this::openRegisterPage);
     }
 
+    private void tryRestoreSession() {
+        AccessToken storedToken = getStoredToken();
+        if (storedToken != null) {
+            userService.setAccessToken(storedToken);
+            tourRepository.listUpcoming().enqueue(new SimpleCallback<>(
+                    response -> {
+                        if (response.isSuccessful()) {
+                            getActivity().onBackPressed();
+                        } else {
+                            showForm();
+                        }
+                    },
+                    error -> showForm()
+            ));
+        } else {
+            showForm();
+        }
+    }
+
+    private void saveRefreshToken(AccessToken accessToken) {
+        getActivity().getPreferences(Context.MODE_PRIVATE).edit()
+                .putString(REFRESH_TOKEN, accessToken.getRefreshToken())
+                .apply();
+    }
+
+    private AccessToken getStoredToken() {
+        String refreshToken = getActivity().getPreferences(Context.MODE_PRIVATE)
+                .getString(REFRESH_TOKEN, null);
+
+        return refreshToken != null
+                ? new AccessToken(
+                null,
+                refreshToken,
+                0,
+                0,
+                null,
+                null
+        ) : null;
+    }
+
+    private void showForm() {
+        binding.loginFormLayout.setVisibility(View.VISIBLE);
+        binding.loader.setVisibility(View.INVISIBLE);
+    }
+
+    private void login(View view) {
+        userService.login(
+                binding.usernameInput.getText().toString(),
+                binding.passwordInput.getText().toString(),
+                new SimpleCallback<>(
+                        response -> {
+                            if (response.isSuccessful()) {
+                                userService.setAccessToken(response.body());
+                                saveRefreshToken(response.body());
+                                getActivity().onBackPressed();
+                            }
+                        },
+                        error -> {
+                        }
+                ));
+    }
+
+    private void openRegisterPage(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(KEYCLOAK_REGISTER_URL));
+        startActivity(browserIntent);
+    }
 
 }
