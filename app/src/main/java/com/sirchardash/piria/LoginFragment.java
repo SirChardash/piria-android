@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -18,6 +20,8 @@ import com.sirchardash.piria.auth.UserService;
 import com.sirchardash.piria.databinding.FragmentLoginBinding;
 import com.sirchardash.piria.repository.SimpleCallback;
 import com.sirchardash.piria.repository.TourRepository;
+
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -62,6 +66,8 @@ public class LoginFragment extends Fragment {
         userService.onRefresh(this::saveRefreshToken);
         tryRestoreSession();
 
+        loadSplashImage();
+
         binding.loginButton.setOnClickListener(this::login);
         binding.registerButton.setOnClickListener(this::openRegisterPage);
     }
@@ -87,7 +93,7 @@ public class LoginFragment extends Fragment {
 
     private void saveRefreshToken(AccessToken accessToken) {
         getActivity().getPreferences(Context.MODE_PRIVATE).edit()
-                .putString(REFRESH_TOKEN, accessToken.getRefreshToken())
+                .putString(REFRESH_TOKEN, accessToken != null ? accessToken.getRefreshToken() : null)
                 .apply();
     }
 
@@ -131,6 +137,17 @@ public class LoginFragment extends Fragment {
     private void openRegisterPage(View view) {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(KEYCLOAK_REGISTER_URL));
         startActivity(browserIntent);
+    }
+
+    private void loadSplashImage() {
+        int id = getResources().getIdentifier(
+                "login_screen_" + new Random().nextInt(5),
+                "drawable",
+                getActivity().getPackageName()
+        );
+        binding.splashImage.setImageResource(id);
+        Animation fadeIn = AnimationUtils.loadAnimation(getContext(), R.anim.fadein);
+        binding.splashImage.startAnimation(fadeIn);
     }
 
 }
