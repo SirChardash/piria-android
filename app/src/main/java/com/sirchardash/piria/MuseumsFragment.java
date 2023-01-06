@@ -25,7 +25,7 @@ public class MuseumsFragment extends Fragment implements NavbarDockedFragment {
     @Inject
     MuseumRepository museumRepository;
     @Inject
-    UserService authenticator;
+    UserService userService;
     @Inject
     TourRepository tourRepository;
 
@@ -41,6 +41,7 @@ public class MuseumsFragment extends Fragment implements NavbarDockedFragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
+        userService.popLoginScreenIfNeeded((MainActivity) getActivity());
         binding = FragmentMuseumsBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }

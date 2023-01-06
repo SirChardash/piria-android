@@ -63,7 +63,7 @@ public class LoginFragment extends Fragment {
                                 if (response.isSuccessful()) {
                                     authenticator.setAccessToken(response.body());
                                     System.out.println("successso");
-                                    getActivity().getSupportFragmentManager().popBackStack();
+                                    getActivity().onBackPressed();
                                 }
                             },
                             error -> {

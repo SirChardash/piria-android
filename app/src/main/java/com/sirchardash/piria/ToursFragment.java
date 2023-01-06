@@ -2,7 +2,6 @@ package com.sirchardash.piria;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
+import com.sirchardash.piria.auth.UserService;
 import com.sirchardash.piria.databinding.FragmentToursBinding;
 import com.sirchardash.piria.model.Tours;
 import com.sirchardash.piria.repository.SimpleCallback;
@@ -20,12 +19,12 @@ import com.sirchardash.piria.repository.TourRepository;
 
 import javax.inject.Inject;
 
-import retrofit2.Callback;
-
 public class ToursFragment extends Fragment implements NavbarDockedFragment {
 
     @Inject
     TourRepository tourRepository;
+    @Inject
+    UserService userService;
 
     private FragmentToursBinding binding;
 
@@ -36,14 +35,12 @@ public class ToursFragment extends Fragment implements NavbarDockedFragment {
     }
 
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
-
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
+        userService.popLoginScreenIfNeeded((MainActivity) getActivity());
         binding = FragmentToursBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {

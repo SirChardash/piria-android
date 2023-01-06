@@ -24,7 +24,6 @@ public class KeycloakAuthenticator implements Authenticator {
         }
 
         if (response.request().header("Authorization") != null) {
-            System.out.println(response.header("WWW-Authenticate"));
             userService.refresh();
         }
 

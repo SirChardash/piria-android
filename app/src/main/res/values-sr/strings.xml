@@ -10,10 +10,10 @@
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
-    <string name="museums_navbar">Museums</string>
-    <string name="tours_navbar">Tours</string>
-    <string name="profile_navbar">Profile</string>
-    <string name="change_language_cta">Switch Language</string>
+    <string name="museums_navbar">Muzeji</string>
+    <string name="tours_navbar">Posjete</string>
+    <string name="profile_navbar">Profil</string>
+    <string name="change_language_cta">Promijeni jezik</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Ovdje ide prikaz informacija o jednom muzeju</string>
     <string name="title_activity_view_museum">ViewMuseumActivity</string>

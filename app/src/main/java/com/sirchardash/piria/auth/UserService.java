@@ -1,10 +1,17 @@
 package com.sirchardash.piria.auth;
 
+import android.app.Activity;
+
+import com.sirchardash.piria.LoginFragment;
+import com.sirchardash.piria.MainActivity;
+import com.sirchardash.piria.repository.SimpleCallback;
+
 import java.io.IOException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 
 @Singleton
@@ -49,6 +56,21 @@ public class UserService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Call<UserInfo> getUserInfo() {
+        return repository.userInfo(getAuthorizationHeader());
+    }
+
+    public void popLoginScreenIfNeeded(MainActivity activity) {
+        getUserInfo().enqueue(new SimpleCallback<>(response -> {
+            if (!response.isSuccessful()) {
+                activity.navigateTo(new LoginFragment(), true);
+            }
+        }, error -> {
+            activity.navigateTo(new LoginFragment(), true);
+        }
+        ));
     }
 
     public void setAccessToken(AccessToken accessToken) {
