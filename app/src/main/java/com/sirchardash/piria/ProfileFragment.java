@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.sirchardash.piria.auth.UserInfo;
 import com.sirchardash.piria.auth.UserService;
 import com.sirchardash.piria.databinding.FragmentProfileBinding;
 import com.sirchardash.piria.repository.SimpleCallback;
@@ -21,6 +22,7 @@ public class ProfileFragment extends Fragment implements NavbarDockedFragment {
     UserService userService;
 
     private FragmentProfileBinding binding;
+    private UserInfo userInfo;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -29,10 +31,9 @@ public class ProfileFragment extends Fragment implements NavbarDockedFragment {
     }
 
     @Override
-    public View onCreateView(
-            LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
         userService.popLoginScreenIfNeeded((MainActivity) getActivity());
         binding = FragmentProfileBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -40,15 +41,16 @@ public class ProfileFragment extends Fragment implements NavbarDockedFragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        userService.getUserInfo().enqueue(new SimpleCallback<>(response -> {
-            if (response.isSuccessful()) {
-                binding.profileNameLabel.setText(response.body().getFullName());
-                binding.profileUsernameLabel.setText(response.body().getUsername());
-                binding.profileEmaiLabel.setText(response.body().getEmail());
-            }
-        }, error -> {
-            error.printStackTrace();
-        }));
+        if (userInfo == null) {
+            userService.getUserInfo().enqueue(new SimpleCallback<>(response -> {
+                if (response.isSuccessful() && response.body() != null) {
+                    populateUserInfo(userInfo = response.body());
+                }
+            }, error -> {
+            }));
+        } else {
+            populateUserInfo(userInfo);
+        }
 
         binding.logOutButton.setOnClickListener(this::logOut);
     }
@@ -57,6 +59,12 @@ public class ProfileFragment extends Fragment implements NavbarDockedFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void populateUserInfo(UserInfo info) {
+        binding.profileNameLabel.setText(info.getFullName());
+        binding.profileUsernameLabel.setText(info.getUsername());
+        binding.profileEmaiLabel.setText(info.getEmail());
     }
 
     private void logOut(View view) {
