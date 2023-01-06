@@ -41,6 +41,8 @@ public class ProfileFragment extends Fragment implements NavbarDockedFragment {
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        binding.profileLayout.setVisibility(View.INVISIBLE);
+        binding.progressBar.setVisibility(View.VISIBLE);
         if (userInfo == null) {
             userService.getUserInfo().enqueue(new SimpleCallback<>(response -> {
                 if (response.isSuccessful() && response.body() != null) {
@@ -65,6 +67,8 @@ public class ProfileFragment extends Fragment implements NavbarDockedFragment {
         binding.profileNameLabel.setText(info.getFullName());
         binding.profileUsernameLabel.setText(info.getUsername());
         binding.profileEmaiLabel.setText(info.getEmail());
+        binding.profileLayout.setVisibility(View.VISIBLE);
+        binding.progressBar.setVisibility(View.INVISIBLE);
     }
 
     private void logOut(View view) {
