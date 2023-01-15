@@ -1,5 +1,7 @@
 package com.sirchardash.piria;
 
+import static com.sirchardash.piria.util.ToastUtil.showToast;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import com.sirchardash.piria.databinding.FragmentTourBinding;
 import com.sirchardash.piria.model.Tour;
 import com.sirchardash.piria.repository.SimpleCallback;
 import com.sirchardash.piria.repository.TourContentRepository;
+import com.sirchardash.piria.util.RandomUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -103,7 +106,7 @@ public class TourFragment extends Fragment {
         String ticketId = binding.ticketIdInput.getText().toString();
 
         if (ticketId.trim().isEmpty()) {
-            showToast("Please input your ticket ID");
+            showToast(getContext(), "Please input your ticket ID");
             return;
         }
 
@@ -120,19 +123,12 @@ public class TourFragment extends Fragment {
                                         true
                                 );
                             } else {
-                                showToast("Gone fukked: " + response.code());
+                                showToast(getContext(), "Gone fukked: " + response.code());
                             }
                         },
-                        error -> showToast("Gone fukked: " + error.getMessage())
+                        error -> showToast(getContext(), "Gone fukked: " + error.getMessage())
                 )
         );
-    }
-
-    private void showToast(String text) {
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(getActivity().getApplicationContext(), text, duration);
-        toast.show();
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -173,7 +169,7 @@ public class TourFragment extends Fragment {
                 "%d%d%d",
                 new Date().getTime() % 1_000_000,
                 Math.abs(userInfo.getEmail().hashCode() % 1_000_000),
-                1000 + new Random().nextInt(8999)
+                1000 + RandomUtils.random().nextInt(8999)
         );
     }
 

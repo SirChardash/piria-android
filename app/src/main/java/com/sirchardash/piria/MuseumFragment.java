@@ -9,19 +9,25 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.sirchardash.piria.databinding.FragmentMuseumBinding;
 import com.sirchardash.piria.model.Museum;
 import com.sirchardash.piria.repository.SimpleCallback;
 import com.sirchardash.piria.repository.TourRepository;
+import com.sirchardash.piria.util.GoogleMapUtils;
 
-public class MuseumFragment extends Fragment {
+public class MuseumFragment extends Fragment implements OnMapReadyCallback {
 
     private final Museum museum;
     private TourRepository tourRepository;
 
     private FragmentMuseumBinding binding;
+    private GoogleMap googleMap;
 
     public MuseumFragment(Museum museum, TourRepository tourRepository) {
         this.museum = museum;
@@ -44,9 +50,10 @@ public class MuseumFragment extends Fragment {
         binding.museumNameLabel.setText(museum.getName());
         binding.museumCategoryLabel.setText(museum.getMuseumType());
         // todo jooooj
-        binding.mapView.getMapAsync(view1 -> {
-            view1.addMarker(new MarkerOptions().position(new LatLng(0, 0)));
-        });
+        binding.mapView.onCreate(savedInstanceState);
+        binding.mapView.onResume();
+        binding.mapView.getMapAsync(this);
+
         binding.museumAddressLabel.setText(museum.getAddress());
         binding.museumCityCountryLabel.setText(String.format("%s, %s", museum.getCity(), museum.getCountry()));
         binding.museumContactLabel.setText(museum.getPhoneNumber());
@@ -82,6 +89,23 @@ public class MuseumFragment extends Fragment {
                     error.printStackTrace();
                 }
         ));
+    }
+
+    public void onMapReady(@NonNull GoogleMap map) {
+        googleMap = map;
+
+        System.out.println(museum.getGoogleLocation());
+        LatLng location = new LatLng(
+                GoogleMapUtils.latitudeFromEmbeddedUrl(museum.getGoogleLocation()),
+                GoogleMapUtils.longitudeFromEmbeddedUrl(museum.getGoogleLocation())
+        );
+        googleMap.addMarker(new MarkerOptions()
+                .position(location)
+                .draggable(false)
+                .title(museum.getName()));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
+        googleMap.setMaxZoomPreference(20);
+        googleMap.setMinZoomPreference(10);
     }
 
 }

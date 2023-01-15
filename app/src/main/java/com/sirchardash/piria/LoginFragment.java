@@ -20,6 +20,8 @@ import com.sirchardash.piria.auth.UserService;
 import com.sirchardash.piria.databinding.FragmentLoginBinding;
 import com.sirchardash.piria.repository.SimpleCallback;
 import com.sirchardash.piria.repository.TourRepository;
+import com.sirchardash.piria.util.RandomUtils;
+import com.sirchardash.piria.util.ToastUtil;
 
 import java.util.Random;
 
@@ -56,7 +58,7 @@ public class LoginFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
-        ((MainActivity)getActivity()).setBackDisabled(true);
+        ((MainActivity) getActivity()).setBackDisabled(true);
         return binding.getRoot();
     }
 
@@ -80,7 +82,7 @@ public class LoginFragment extends Fragment {
             tourRepository.listUpcoming().enqueue(new SimpleCallback<>(
                     response -> {
                         if (response.isSuccessful()) {
-                            ((MainActivity)getActivity()).setBackDisabled(false);
+                            ((MainActivity) getActivity()).setBackDisabled(false);
                             getActivity().onBackPressed();
                         } else {
                             showForm();
@@ -128,12 +130,13 @@ public class LoginFragment extends Fragment {
                             if (response.isSuccessful()) {
                                 userService.setAccessToken(response.body());
                                 saveRefreshToken(response.body());
-                                ((MainActivity)getActivity()).setBackDisabled(false);
+                                ((MainActivity) getActivity()).setBackDisabled(false);
                                 getActivity().onBackPressed();
+                            } else {
+                                ToastUtil.showToast(getContext(), "Login failed. Check credentials.");
                             }
                         },
-                        error -> {
-                        }
+                        error -> ToastUtil.showToast(getContext(), "Login failed.")
                 ));
     }
 
@@ -144,7 +147,7 @@ public class LoginFragment extends Fragment {
 
     private void loadSplashImage() {
         int id = getResources().getIdentifier(
-                "login_screen_" + new Random().nextInt(5),
+                "login_screen_" + RandomUtils.random().nextInt(5),
                 "drawable",
                 getActivity().getPackageName()
         );
