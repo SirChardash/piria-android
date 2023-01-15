@@ -58,6 +58,13 @@ public class RepositoryModule {
 
     @Provides
     @Singleton
+    public TourContentRepository tourContentRepository(@Named("authorizedRetrofit") Retrofit retrofit) {
+
+        return retrofit.create(TourContentRepository.class);
+    }
+
+    @Provides
+    @Singleton
     public KeycloakRepository keycloakRepository() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         Retrofit retrofit = new Retrofit.Builder()

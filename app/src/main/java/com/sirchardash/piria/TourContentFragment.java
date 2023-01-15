@@ -1,0 +1,90 @@
+package com.sirchardash.piria;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.sirchardash.piria.databinding.FragmentTourContentBinding;
+import com.sirchardash.piria.model.TourContentEntry;
+import com.sirchardash.piria.repository.SimpleCallback;
+import com.sirchardash.piria.repository.TourContentRepository;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.util.List;
+
+public class TourContentFragment extends Fragment {
+
+    private final TourContentRepository tourContentRepository;
+    private String ticketId;
+    private final List<TourContentEntry> content;
+
+    private FragmentTourContentBinding binding;
+
+    public TourContentFragment(TourContentRepository tourContentRepository,
+                               String ticketId,
+                               List<TourContentEntry> content) {
+
+        this.tourContentRepository = tourContentRepository;
+        this.ticketId = ticketId;
+        this.content = content;
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(@NotNull LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentTourContentBinding.inflate(inflater, container, false);
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        content.stream()
+                .filter(entry -> entry.getType().equals("IMAGE"))
+                .forEach(this::showImage);
+    }
+
+    private void showImage(TourContentEntry entry) {
+        int id = Integer.parseInt(entry.getUrl().replace("/content/", ""));
+
+        tourContentRepository.getContent(id, ticketId).enqueue(new SimpleCallback<>(
+                response -> {
+                    if (response.isSuccessful() && response.body() != null) {
+                        try {
+                            byte[] bytes = response.body().bytes();
+                            Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            ImageView image = new ImageView(getContext());
+                            image.setMinimumHeight(binding.tourContentLayout.getWidth());
+                            image.setMinimumWidth(binding.tourContentLayout.getWidth());
+                            image.setImageBitmap(bmp);
+
+                            binding.tourContentLayout.addView(image);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                Throwable::printStackTrace
+        ));
+    }
+
+}
