@@ -56,7 +56,7 @@ public class LoginFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentLoginBinding.inflate(inflater, container, false);
-
+        ((MainActivity)getActivity()).setBackDisabled(true);
         return binding.getRoot();
     }
 
@@ -80,6 +80,7 @@ public class LoginFragment extends Fragment {
             tourRepository.listUpcoming().enqueue(new SimpleCallback<>(
                     response -> {
                         if (response.isSuccessful()) {
+                            ((MainActivity)getActivity()).setBackDisabled(false);
                             getActivity().onBackPressed();
                         } else {
                             showForm();
@@ -127,6 +128,7 @@ public class LoginFragment extends Fragment {
                             if (response.isSuccessful()) {
                                 userService.setAccessToken(response.body());
                                 saveRefreshToken(response.body());
+                                ((MainActivity)getActivity()).setBackDisabled(false);
                                 getActivity().onBackPressed();
                             }
                         },

@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     );
 
     private BottomNavigationView bottomNavigation;
+    private boolean backDisabled;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (backDisabled) {
+            super.moveTaskToBack(true);
+            return;
+        }
+
         super.onBackPressed();
         setNavbarVisibility(getSupportFragmentManager().findFragmentById(R.id.fragment_container));
     }
@@ -79,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
                         ? View.VISIBLE
                         : View.INVISIBLE
         );
+    }
+
+    public void setBackDisabled(boolean backDisabled) {
+        this.backDisabled = backDisabled;
     }
 
 }
