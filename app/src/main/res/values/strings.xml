@@ -1,20 +1,34 @@
 <resources>
     <string name="app_name">Bravesmart</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-
+    <!-- Navbar -->
     <string name="museums_navbar">Museums</string>
     <string name="tours_navbar">Tours</string>
     <string name="profile_navbar">Profile</string>
+
+    <!-- MuseumsFragment -->
+    <string name="search_hint">Search for museums</string>
+
+    <!-- ToursFragment -->
+    <string name="booked_tours">Booked Tours</string>
+    <string name="upcoming_tours">Upcoming Tours</string>
+    <string name="previous_tours">Previous Tours</string>
+    <string name="no_tours">No tours here.</string>
+
+    <!-- ProfileFragment -->
     <string name="change_language_cta">Switch Language</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Ovdje ide prikaz informacija o jednom muzeju</string>
-    <string name="title_activity_view_museum">ViewMuseumActivity</string>
+    <string name="log_out_cta">Log Out</string>
+
+    <!-- LoginFragment -->
+    <string name="login_cta">Login</string>
+    <string name="password_hint">Password</string>
+    <string name="username_hint">Username</string>
+    <string name="new_user_question">New User?</string>
+    <string name="register_cta">Register</string>
+
+    <!-- TourFragment -->
+    <string name="buy_ticket_cta">Buy Ticket</string>
+    <string name="visit_cta">Visit</string>
+    <string name="ticket_hint">Your ticket ID you received in the mail</string>
+
 </resources>

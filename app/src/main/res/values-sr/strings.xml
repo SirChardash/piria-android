@@ -1,20 +1,34 @@
 <resources>
     <string name="app_name">Bravesmart</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-
+    <!-- Navbar -->
     <string name="museums_navbar">Muzeji</string>
     <string name="tours_navbar">Posjete</string>
     <string name="profile_navbar">Profil</string>
+
+    <!-- MuseumsFragment -->
+    <string name="search_hint">Pretraga muzeja</string>
+
+    <!-- ToursFragment -->
+    <string name="booked_tours">Rezervisane posjete</string>
+    <string name="upcoming_tours">Nadolazeće posjete</string>
+    <string name="previous_tours">Protekle posjete</string>
+    <string name="no_tours">Nema posjeta.</string>
+
+    <!-- ProfileFragment -->
     <string name="change_language_cta">Promijeni jezik</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Ovdje ide prikaz informacija o jednom muzeju</string>
-    <string name="title_activity_view_museum">ViewMuseumActivity</string>
+    <string name="log_out_cta">Odjava</string>
+
+    <!-- LoginFragment -->
+    <string name="login_cta">Prijava</string>
+    <string name="password_hint">Šifra</string>
+    <string name="username_hint">Korisničko ime</string>
+    <string name="new_user_question">Novi korisnik?</string>
+    <string name="register_cta">Registrujte se</string>
+
+    <!-- TourFragment -->
+    <string name="buy_ticket_cta">Kupi kartu</string>
+    <string name="visit_cta">Posjeti</string>
+    <string name="ticket_hint">Serijski broj ulaznice</string>
+
 </resources>

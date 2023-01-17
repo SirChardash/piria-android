@@ -25,7 +25,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Booked Tours"
+                android:text="@string/booked_tours"
                 android:textSize="20sp" />
 
             <Space
@@ -48,7 +48,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Upcoming Tours"
+                android:text="@string/upcoming_tours"
                 android:textSize="20sp" />
 
             <Space
@@ -72,7 +72,7 @@
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Previous Tours"
+                android:text="@string/previous_tours"
                 android:textSize="20sp" />
 
             <Space
@@ -84,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="40pt"
-                android:orientation="vertical"></LinearLayout>
+                android:orientation="vertical" />
 
         </LinearLayout>
     </ScrollView>

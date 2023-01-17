@@ -16,6 +16,7 @@ import com.sirchardash.piria.model.Museum;
 import com.sirchardash.piria.repository.MuseumRepository;
 import com.sirchardash.piria.repository.SimpleCallback;
 import com.sirchardash.piria.repository.TourRepository;
+import com.sirchardash.piria.util.LocaleUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -84,7 +85,7 @@ public class MuseumsFragment extends Fragment implements NavbarDockedFragment {
         @Override
         public boolean onQueryTextSubmit(String s) {
             System.out.println(binding.searchInput.getQuery().toString());
-            museumRepository.find("en", binding.searchInput.getQuery().toString()).enqueue(new SimpleCallback<>(
+            museumRepository.find(LocaleUtils.getCurrentLocale(), binding.searchInput.getQuery().toString()).enqueue(new SimpleCallback<>(
                     response -> {
                         if (response.isSuccessful() && response.body() != null) {
                             populateList(museums = response.body().getMuseums());
@@ -101,5 +102,9 @@ public class MuseumsFragment extends Fragment implements NavbarDockedFragment {
             return false;
         }
     };
+
+    public void updateInterface() {
+        museums = Collections.emptyList();
+    }
 
 }

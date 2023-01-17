@@ -100,14 +100,14 @@
             android:id="@+id/buyTicketButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Buy Ticket" />
+            android:text="@string/buy_ticket_cta" />
 
         <EditText
             android:id="@+id/ticketIdInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="Your ticket ID you received in the mail"
+            android:hint="@string/ticket_hint"
             android:inputType="textPersonName"
             android:textAlignment="center" />
 
@@ -115,6 +115,6 @@
             android:id="@+id/visitTourButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Visit" />
+            android:text="@string/visit_cta" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

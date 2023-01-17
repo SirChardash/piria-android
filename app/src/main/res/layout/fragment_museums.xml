@@ -16,7 +16,7 @@
         android:backgroundTintMode="src_over"
         android:baselineAligned="false"
         android:iconifiedByDefault="false"
-        android:queryHint="Search for museums"
+        android:queryHint="@string/search_hint"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

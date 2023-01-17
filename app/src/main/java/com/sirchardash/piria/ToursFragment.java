@@ -120,7 +120,7 @@ public class ToursFragment extends Fragment implements NavbarDockedFragment {
 
         if (tours.isEmpty()) {
             TextView textView = new TextView(getContext(), null);
-            textView.setText("Guess not.");
+            textView.setText(R.string.no_tours);
             layout.addView(textView);
         } else {
             tours.stream()

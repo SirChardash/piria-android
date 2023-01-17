@@ -24,10 +24,9 @@ import com.sirchardash.piria.util.GoogleMapUtils;
 public class MuseumFragment extends Fragment implements OnMapReadyCallback {
 
     private final Museum museum;
-    private TourRepository tourRepository;
+    private final TourRepository tourRepository;
 
     private FragmentMuseumBinding binding;
-    private GoogleMap googleMap;
 
     public MuseumFragment(Museum museum, TourRepository tourRepository) {
         this.museum = museum;
@@ -40,7 +39,8 @@ public class MuseumFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentMuseumBinding.inflate(inflater, container, false);
         return binding.getRoot();
@@ -49,7 +49,7 @@ public class MuseumFragment extends Fragment implements OnMapReadyCallback {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         binding.museumNameLabel.setText(museum.getName());
         binding.museumCategoryLabel.setText(museum.getMuseumType());
-        // todo jooooj
+
         binding.mapView.onCreate(savedInstanceState);
         binding.mapView.onResume();
         binding.mapView.getMapAsync(this);
@@ -65,7 +65,7 @@ public class MuseumFragment extends Fragment implements OnMapReadyCallback {
                         binding.toursLayout.removeAllViews();
                         if (response.body().getTours().isEmpty()) {
                             TextView textView = new TextView(getContext(), null);
-                            textView.setText("Guess not.");
+                            textView.setText(R.string.no_tours);
                             binding.toursLayout.addView(textView);
                             System.out.println("happened");
                         } else {
@@ -81,7 +81,7 @@ public class MuseumFragment extends Fragment implements OnMapReadyCallback {
                     } else {
                         binding.toursLayout.removeAllViews();
                         TextView textView = new TextView(getContext(), null);
-                        textView.setText("Certified ohno moment.");
+                        textView.setText(R.string.no_tours);
                         binding.toursLayout.addView(textView);
                     }
                 },
@@ -92,20 +92,17 @@ public class MuseumFragment extends Fragment implements OnMapReadyCallback {
     }
 
     public void onMapReady(@NonNull GoogleMap map) {
-        googleMap = map;
-
-        System.out.println(museum.getGoogleLocation());
         LatLng location = new LatLng(
                 GoogleMapUtils.latitudeFromEmbeddedUrl(museum.getGoogleLocation()),
                 GoogleMapUtils.longitudeFromEmbeddedUrl(museum.getGoogleLocation())
         );
-        googleMap.addMarker(new MarkerOptions()
+        map.addMarker(new MarkerOptions()
                 .position(location)
                 .draggable(false)
                 .title(museum.getName()));
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
-        googleMap.setMaxZoomPreference(20);
-        googleMap.setMinZoomPreference(10);
+        map.moveCamera(CameraUpdateFactory.newLatLng(location));
+        map.setMaxZoomPreference(20);
+        map.setMinZoomPreference(10);
     }
 
 }
