@@ -2,6 +2,7 @@ package com.sirchardash.piria;
 
 import static com.sirchardash.piria.util.ToastUtil.showToast;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -140,17 +141,21 @@ public class TourFragment extends Fragment {
             return;
         }
 
+        String paymentNumber = generatePaymentNumber();
         String url = String.format(
                 Locale.ENGLISH,
                 BANK_URL_TEMPLATE,
                 "sr",
-                generatePaymentNumber(),
+                paymentNumber,
                 tour.getTicketPrice(),
                 userInfo.getUserId(),
                 tour.getId()
         );
 
-        System.out.println(url);
+        getActivity().getPreferences(Context.MODE_PRIVATE).edit()
+                .putString("pendingPaymentNumber", paymentNumber)
+                .putInt("pendingPaymentTourId", tour.getId())
+                .apply();
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
     }

@@ -4,6 +4,8 @@ import com.sirchardash.piria.auth.KeycloakAuthenticator;
 import com.sirchardash.piria.auth.KeycloakRepository;
 import com.sirchardash.piria.auth.UserService;
 
+import java.time.Duration;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
@@ -18,15 +20,17 @@ public class RepositoryModule {
 
     public static final String SERVER_URL = "http://34.118.42.41";
     public static final String KEYCLOAK_REGISTER_URL = SERVER_URL + ":8020/auth/realms/bravesmart/protocol/openid-connect/registrations?client_id=bravesmart-web&response_type=code";
+    public static final String MUSEUM_SERVICE_URL = SERVER_URL + ":8080";
 
     @Provides
     @Singleton
     @Named("authorizedRetrofit")
     public Retrofit authorizedRetrofit(KeycloakAuthenticator authenticator) {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder()
+                .callTimeout(Duration.ofMinutes(3))
                 .authenticator(authenticator);
         return new Retrofit.Builder()
-                .baseUrl(SERVER_URL + ":8080/")
+                .baseUrl(MUSEUM_SERVICE_URL)
                 .addConverterFactory(JacksonConverterFactory.create())
                 .client(httpClient.build())
                 .build();
@@ -59,8 +63,13 @@ public class RepositoryModule {
     @Provides
     @Singleton
     public TourContentRepository tourContentRepository(@Named("authorizedRetrofit") Retrofit retrofit) {
-
         return retrofit.create(TourContentRepository.class);
+    }
+
+    @Provides
+    @Singleton
+    public TourAttendanceRepository tourAttendanceRepository(@Named("authorizedRetrofit") Retrofit retrofit) {
+        return retrofit.create(TourAttendanceRepository.class);
     }
 
     @Provides
@@ -79,10 +88,7 @@ public class RepositoryModule {
     @Provides
     @Singleton
     public UserService userService(KeycloakRepository keycloakRepository) {
-        UserService userService = new UserService(keycloakRepository);
-//        userService.login("ad", "min", new SimpleCallback<>(success -> userService.setAccessToken(success.body()), response -> {}));
-
-        return userService;
+        return new UserService(keycloakRepository);
     }
 
     @Provides

@@ -1,6 +1,7 @@
 package com.sirchardash.piria;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +17,10 @@ import com.sirchardash.piria.auth.UserService;
 import com.sirchardash.piria.databinding.FragmentToursBinding;
 import com.sirchardash.piria.model.Tour;
 import com.sirchardash.piria.repository.SimpleCallback;
+import com.sirchardash.piria.repository.TourAttendanceRepository;
 import com.sirchardash.piria.repository.TourContentRepository;
 import com.sirchardash.piria.repository.TourRepository;
+import com.sirchardash.piria.util.LocaleUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +35,8 @@ public class ToursFragment extends Fragment implements NavbarDockedFragment {
     TourRepository tourRepository;
     @Inject
     TourContentRepository tourContentRepository;
+    @Inject
+    TourAttendanceRepository tourAttendanceRepository;
     @Inject
     UserService userService;
 
@@ -65,6 +70,11 @@ public class ToursFragment extends Fragment implements NavbarDockedFragment {
         populateLayout(binding.upcomingToursLayout, upcomingTours, false, true);
         populateLayout(binding.previousToursLayout, previousTours, false, false);
 
+        checkAttendance();
+        fetchTourContent();
+    }
+
+    private void fetchTourContent() {
         tourRepository.listBooked().enqueue(new SimpleCallback<>(
                 response -> {
                     if (response.isSuccessful() && response.body() != null) {
@@ -110,6 +120,30 @@ public class ToursFragment extends Fragment implements NavbarDockedFragment {
                 },
                 Throwable::printStackTrace
         ));
+    }
+
+    private void checkAttendance() {
+        SharedPreferences preferences = getActivity().getPreferences(Context.MODE_PRIVATE);
+        String paymentNumber = preferences.getString("pendingPaymentNumber", null);
+        int tourId = preferences.getInt("pendingPaymentTourId", 0);
+
+        if (paymentNumber != null) {
+            tourAttendanceRepository.logAttendance(tourId, paymentNumber, LocaleUtils.getCurrentLocale()).enqueue(new SimpleCallback<>(
+                    response -> {
+                        if (response.isSuccessful()) {
+                            fetchTourContent();
+                            populateLayout(binding.bookedToursLayout, bookedTours, false, true);
+                            populateLayout(binding.upcomingToursLayout, upcomingTours, false, true);
+                            populateLayout(binding.previousToursLayout, previousTours, false, false);
+                            preferences.edit().remove("pendingPaymentNumber")
+                                    .remove("pendingPaymentTourId")
+                                    .apply();
+                        }
+                    },
+                    error -> {
+                    }
+            ));
+        }
     }
 
     private void populateLayout(LinearLayout layout,
