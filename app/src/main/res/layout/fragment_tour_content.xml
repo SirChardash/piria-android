@@ -25,7 +25,13 @@
             <WebView
                 android:id="@+id/webView"
                 android:layout_width="match_parent"
-                android:layout_height="300dp" />
+                android:layout_height="300dp"></WebView>
+
+            <VideoView
+                android:id="@+id/videoView"
+                android:layout_width="3000dp"
+                android:layout_height="300dp"
+                android:layout_gravity="center" />
         </LinearLayout>
     </ScrollView>
 
