@@ -30,5 +30,6 @@
     <string name="buy_ticket_cta">Kupi kartu</string>
     <string name="visit_cta">Posjeti</string>
     <string name="ticket_hint">Serijski broj ulaznice</string>
+    <string name="wrong_ticket_id">Netačna ulaznica</string>
 
 </resources>

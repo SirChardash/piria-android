@@ -93,26 +93,13 @@ public class TourContentFragment extends Fragment {
     }
 
     private void showLink(TourContentEntry entry) {
-        int id = Integer.parseInt(entry.getUrl().replace("/content/", ""));
+        WebSettings webSettings = binding.webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setUseWideViewPort(true);
+        String videoId = entry.getUrl().replaceAll("^.*=", "");
 
-        tourContentRepository.getContent(id, ticketId).enqueue(new SimpleCallback<>(
-                response -> {
-                    if (response.isSuccessful() && response.body() != null) {
-                        try {
-                            WebSettings webSettings = binding.webView.getSettings();
-                            webSettings.setJavaScriptEnabled(true);
-                            webSettings.setLoadWithOverviewMode(true);
-                            webSettings.setUseWideViewPort(true);
-                            String videoId = new String(response.body().bytes()).replaceAll("^.*=", "");
-
-                            binding.webView.loadUrl("https://www.youtube.com/embed/" + videoId);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                Throwable::printStackTrace
-        ));
+        binding.webView.loadUrl("https://www.youtube.com/embed/" + videoId);
     }
 
     private void showImage(TourContentEntry entry) {
@@ -127,6 +114,7 @@ public class TourContentFragment extends Fragment {
                             ImageView image = new ImageView(getContext());
                             image.setMinimumHeight(binding.tourContentLayout.getWidth());
                             image.setMinimumWidth(binding.tourContentLayout.getWidth());
+                            image.setPadding(0, 30, 0, 30);
                             image.setImageBitmap(bmp);
 
                             binding.tourContentLayout.addView(image);

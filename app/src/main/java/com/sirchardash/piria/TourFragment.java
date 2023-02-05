@@ -123,7 +123,7 @@ public class TourFragment extends Fragment {
                                         true
                                 );
                             } else {
-                                showToast(getContext(), "Gone fukked: " + response.code());
+                                showToast(getContext(), "@string/wrong_ticket_id");
                             }
                         },
                         error -> showToast(getContext(), "Gone fukked: " + error.getMessage())
